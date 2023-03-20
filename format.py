@@ -1,33 +1,33 @@
 import csv
 
-def convert_to_full(filepath):
+def convert_to_full(filepath, type):
     # This will convert the single letters to full words for an easier read
-
+    
     options = {
 
-                    "poisonous/edible": {"e": "edible", "p": "poisonous"},
-                    "cap-shape": {"b": "bell", "c": "conical", "x": "convex", "f": "flat", "k": "knobbed", "s": "sunken"},
-                    "cap-surface": {"f": "fibrous", "g": "grooves", "y": "scaly", "s": "smooth"},
-                    "cap-color": {"n": "brown", "b": "buff", "c": "cinnamon", "g": "gray", "r": "green", "p": "pink", "u": "purple", "e": "red", "w": "white", "y": "yellow"},
-                    "bruises?": {"t": "bruises", "f": "no bruises"},
-                    "odor": {"a": "almonds", "l": "anise", "c": "creosote", "y": "fishy", "f": "foul", "m": "musty", "n": "None", "p": "pungent", "s": "spicy"},
-                    "gill-attachment": {"a": "attached", "d": "descending", "f": "free", "n": "notched"},
-                    "gill-spacing": {"c": "close", "w": "crowded", "d": "distant"},
-                    "gill-size": {"b": "broad", "n": "narrow"},
-                    "gill-color": {"k": "black", "n": "brown", "b": "buff", "h": "chocolate", "g": "gray", "r": "green", "o": "orange", "p": "pink", "u": "purple", "e": "red", "w": "white", "y": "yellow"},
-                    "stalk-shape": {"e": "enlarging", "t": "tapering"},
-                    "stalk-root": {"b": "bulbous", "c": "club", "u": "cup", "e": "equal", "z": "rhizomorphs", "r": "rooted", "?": "missing"},
-                    "stalk-surface-above-ring": {"f": "fibrous", "y": "scaly", "k": "silky", "s": "smooth"},
-                    "stalk-surface-below-ring": {"f": "fibrous", "y": "scaly", "k": "silky", "s": "smooth"},
-                    "stalk-color-above-ring": {"n": "brown", "b": "buff", "c": "cinnamon", "g": "gray", "o": "orange", "p": "pink", "e": "red", "w": "white", "y": "yellow"},
-                    "stalk-color-below-ring": {"n": "brown", "b": "buff", "c": "cinnamon", "g": "gray", "o": "orange", "p": "pink", "e": "red", "w": "white", "y": "yellow"},
-                    "veil-type": {"p": "partial", "u": "universal"},
-                    "veil-color": {"n": "brown", "o": "orange", "w": "white", "y": "yellow"},
-                    "ring-number": {"n": "none", "o": "one", "t": "two"},
-                    "ring-type": {"c": "cobwebby", "e": "evanescent", "f": "flaring", "l": "large", "n": "none", "p": "pendant", "s": "sheathing", "z": "zone"},
-                    "spore-print-color": {"k": "black", "n": "brown", "b": "buff", "h": "chocolate", "r": "green", "o": "orange", "u": "purple", "w": "white", "y": "yellow"},
-                    "population": {"a": "abundant", "c": "clustered", "n": "numerous", "s": "scattered", "v": "several", "y": "solitary"},
-                    "habitat": {"g": "grasses", "l": "leaves", "m": "meadows", "p": "paths", "u": "urban", "w": "waste", "d": "woods"}
+                    "poisonous/edible": {"e": {"name": "edible", "number": 0}, "p": {"name": "poisonous", "number": 1}},
+                    "cap-shape": {"b": {"name": "bell", "number": 0}, "c": {"name": "conical", "number": 1}, "x": {"name": "convex", "number": 2}, "f": {"name": "flat", "number": 3}, "k": {"name": "knobbed", "number": 4}, "s": {"name": "sunken", "number": 5}},
+                    "cap-surface": {"f": {"name": "fibrous", "number": 0}, "g": {"name": "grooves", "number": 1}, "y": {"name": "scaly", "number": 2}, "s": {"name": "smooth", "number": 3}},
+                    "cap-color": {"n": {"name": "brown", "number": 0}, "b": {"name": "buff", "number": 1}, "c": {"name": "cinnamon", "number": 2}, "g": {"name": "gray", "number": 3}, "r": {"name": "green", "number": 4}, "p": {"name": "pink", "number": 5}, "u": {"name": "purple", "number": 6}, "e": {"name": "red", "number": 7}, "w": {"name": "white", "number": 8}, "y": {"name": "yellow", "number": 9}},
+                    "bruises?": {"f": {"name": "no bruises", "number": 0}, "t": {"name": "bruises", "number": 1}},
+                    "odor": {"a": {"name": "almonds", "number": 0}, "l": {"name": "anise", "number": 1}, "c": {"name": "creosote", "number": 2}, "y": {"name": "fishy", "number": 3}, "f": {"name": "foul", "number": 4}, "m": {"name": "musty", "number": 5}, "n": {"name": "None", "number": 6}, "p": {"name": "pungent", "number": 7}, "s": {"name": "spicy", "number": 8}},
+                    "gill-attachment": {"a": {"name": "attached", "number": 0}, "d": {"name": "descending", "number": 1}, "f": {"name": "free", "number": 2}, "n": {"name": "notched", "number": 3}},
+                    "gill-spacing": {"c": {"name": "close", "number": 0}, "w": {"name": "crowded", "number": 1}, "d": {"name": "distant", "number": 2}},
+                    "gill-size": {"b": {"name": "broad", "number": 0}, "n": {"name": "narrow", "number": 1}},
+                    "gill-color": {"k": {"name": "black", "number": 0}, "n": {"name": "brown", "number": 1}, "b": {"name": "buff", "number": 2}, "h": {"name": "chocolate", "number": 3}, "g": {"name": "gray", "number": 4}, "r": {"name": "green", "number": 5}, "o": {"name": "orange", "number": 6}, "p": {"name": "pink", "number": 7}, "u": {"name": "purple", "number": 8}, "e": {"name": "red", "number": 9}, "w": {"name": "white", "number": 10}, "y": {"name": "yellow", "number": 11}},
+                    "stalk-shape": {"e": {"name": "enlarging", "number": 0}, "t": {"name": "tapering", "number": 1}},
+                    "stalk-root": {"b": {"name": "bulbous", "number": 0}, "c": {"name": "club", "number": 1}, "u": {"name": "cup", "number": 2}, "e": {"name": "equal", "number": 3}, "z": {"name": "rhizomorphs", "number": 4}, "r": {"name": "rooted", "number": 5}, "?": {"name": "missing", "number": 6}},
+                    "stalk-surface-above-ring": {"f": {"name": "fibrous", "number": 0}, "y": {"name": "scaly", "number": 1}, "k": {"name": "silky", "number": 2}, "s": {"name": "smooth", "number": 3}},
+                    "stalk-surface-below-ring": {"f": {"name": "fibrous", "number": 0}, "y": {"name": "scaly", "number": 1}, "k": {"name": "silky", "number": 2}, "s": {"name": "smooth", "number": 3}},
+                    "stalk-color-above-ring": {"n": {"name": "brown", "number": 0}, "b": {"name": "buff", "number": 1}, "c": {"name": "cinnamon", "number": 2}, "g": {"name": "gray", "number": 3}, "o": {"name": "orange", "number": 4}, "p": {"name": "pink", "number": 5}, "e": {"name": "red", "number": 6}, "w": {"name": "white", "number": 7}, "y": {"name": "yellow", "number": 8}},
+                    "stalk-color-below-ring": {"n": {"name": "brown", "number": 0}, "b": {"name": "buff", "number": 1}, "c": {"name": "cinnamon", "number": 2}, "g": {"name": "gray", "number": 3}, "o": {"name": "orange", "number": 4}, "p": {"name": "pink", "number": 5}, "e": {"name": "red", "number": 6}, "w": {"name": "white", "number": 7}, "y": {"name": "yellow", "number": 8}},
+                    "veil-type": {"p": {"name": "partial", "number": 0}, "u": {"name": "universal", "number": 1}},
+                    "veil-color": {"n": {"name": "brown", "number": 0}, "o": {"name": "orange", "number": 1}, "w": {"name": "white", "number": 2}, "y": {"name": "yellow", "number": 3}},
+                    "ring-number": {"n": {"name": "none", "number": 0}, "o": {"name": "one", "number": 1}, "t": {"name": "two", "number": 2}},
+                    "ring-type": {"c": {"name": "cobwebby", "number": 0}, "e": {"name": "evanescent", "number": 1}, "f": {"name": "flaring", "number": 2}, "l": {"name": "large", "number": 3}, "n": {"name": "none", "number": 4}, "p": {"name": "pendant", "number": 5}, "s": {"name": "sheathing", "number": 6}, "z": {"name": "zone", "number": 7}},
+                    "spore-print-color": {"k": {"name": "black", "number": 0}, "n": {"name": "brown", "number": 1}, "b": {"name": "buff", "number": 2}, "h": {"name": "chocolate", "number": 3}, "r": {"name": "green", "number": 4}, "o": {"name": "orange", "number": 5}, "u": {"name": "purple", "number": 6}, "w": {"name": "white", "number": 7}, "y": {"name": "yellow", "number": 8}},
+                    "population": {"a": {"name": "abundant", "number": 0}, "c": {"name": "clustered", "number": 1}, "n": {"name": "numerous", "number": 2}, "s": {"name": "scattered", "number": 3}, "v": {"name": "several", "number": 4}, "y": {"name": "solitary", "number": 5}},
+                    "habitat": {"g": {"name": "grasses", "number": 0}, "l": {"name": "leaves", "number": 1}, "m": {"name": "meadows", "number": 2}, "p": {"name": "paths", "number": 3}, "u": {"name": "urban", "number": 4}, "w": {"name": "waste", "number": 5}, "d": {"name": "woods", "number": 6}}
                 }
 
     file = open(filepath, 'r')
@@ -69,7 +69,7 @@ def convert_to_full(filepath):
         for attribute in options:
             for key in options[attribute]:
                 if line[char_count] == key:
-                    row_data[row_count][attribute] = options[attribute][key]
+                    row_data[row_count][attribute] = options[attribute][key][type]
                     char_count += 2
                     break
             
@@ -81,7 +81,7 @@ def convert_to_full(filepath):
 
 if __name__ == '__main__':
     
-    data = convert_to_full("agaricus-lepiota.data")
+    data_numbers = convert_to_full("agaricus-lepiota.data", "number")
 
     columns = ["poisonous/edible","cap-shape", "cap-surface",
                "cap-color", "bruises?", "odor", "gill-attachment",
@@ -92,9 +92,26 @@ if __name__ == '__main__':
                "ring-number", "ring-type", "spore-print-color",
                "population", "habitat"]
 
-    with open('mush_data.csv', 'w') as file:
+    with open('mush_data_numbers.csv', 'w') as file:
         writer = csv.DictWriter(file, fieldnames= columns)
         writer.writeheader()
-        for key in data:
-            writer.writerow(data[key])
-    
+        for key in data_numbers:
+            writer.writerow(data_numbers[key])
+
+    data_names = convert_to_full("agaricus-lepiota.data", "name")
+
+    columns = ["poisonous/edible","cap-shape", "cap-surface",
+               "cap-color", "bruises?", "odor", "gill-attachment",
+               "gill-spacing", "gill-size", "gill-color", 
+               "stalk-shape", "stalk-root", "stalk-surface-above-ring",
+               "stalk-surface-below-ring", "stalk-color-above-ring",
+               "stalk-color-below-ring", "veil-type", "veil-color",
+               "ring-number", "ring-type", "spore-print-color",
+               "population", "habitat"]
+
+    with open('mush_data_names.csv', 'w') as file:
+        writer = csv.DictWriter(file, fieldnames= columns)
+        writer.writeheader()
+        for key in data_names:
+            writer.writerow(data_names[key])
+  
