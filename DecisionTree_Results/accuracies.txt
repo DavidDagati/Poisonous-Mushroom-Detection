@@ -10,16 +10,11 @@ Classification Report:              precision    recall  f1-score   support
 weighted avg       0.95      0.95      0.95      2438
 
 
-Runtime: 0.009975194931030273
+Runtime: 0.007285356521606445
 Test set Accuracy:0.9524200164068909
 Train set Accuracy 0.9549771368272951
 Training set score: 0.9549771368272951
 Test set score: 0.9524200164068909
-
-Confusion matrix
-
- [[1171   87]
- [  29 1151]]
 ----------------------------------------------------------------------------------------------------
 After Hyperparameter Tune:
 Classification Report:              precision    recall  f1-score   support
@@ -32,7 +27,7 @@ Classification Report:              precision    recall  f1-score   support
 weighted avg       1.00      1.00      1.00      2438
 
 
-Runtime: 0.007403850555419922
+Runtime: 0.009470462799072266
 Test set Accuracy:1.0
 Train set Accuracy 1.0
 Training set score: 1.0

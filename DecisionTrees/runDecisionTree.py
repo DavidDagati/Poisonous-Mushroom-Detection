@@ -253,7 +253,6 @@ fig.savefig(f"DecisionTree_Results/Final_Decision_Tree.png")
 
 
 # Compare train-set and test-set accuracy
-# https://gist.github.com/SaranyaRavikumar06/f8a76c500f954fdfd927c74849bd24c3
 
 f.write(f'Runtime: {enclfime - startTime}\n')
 
