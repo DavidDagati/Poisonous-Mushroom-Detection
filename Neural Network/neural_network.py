@@ -54,9 +54,9 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_
 ## Hyperparameters 
 nn = MLPClassifier(max_iter=300, random_state=1)
 parameter_space = {
-    'hidden_layer_sizes': [(20,), (5,2)],
+    'hidden_layer_sizes': [(100,50,30), (20,), (5,2)],
     'activation': ['tanh', 'relu', 'logistic'],
-    'solver': ['sgd', 'adam', 'lbfgs'],
+    'solver': ['sgd', 'adam'],
     'alpha': [0.0001, 0.05],
     'learning_rate': ['constant','adaptive'],
 }
