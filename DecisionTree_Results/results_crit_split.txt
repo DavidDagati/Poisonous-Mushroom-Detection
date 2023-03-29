@@ -1,0 +1,93 @@
+--------------------------------------------------
+Criterion=entropy | Splitter=best | maxDepth=5 | minSampleLeaves=2 | maxFeatures=None
+
+Classification Report:              precision    recall  f1-score   support
+
+           0       0.99      1.00      0.99      1257
+           1       1.00      0.99      0.99      1181
+
+    accuracy                           0.99      2438
+   macro avg       0.99      0.99      0.99      2438
+weighted avg       0.99      0.99      0.99      2438
+
+
+Runtime: 0.007323265075683594
+Test set Accuracy:0.9934372436423298
+Train set Accuracy 0.9943721421034118
+Training set score: 0.9943721421034118
+Test set score: 0.9934372436423298
+
+Confusion matrix
+
+ [[1257    0]
+ [  16 1165]]
+----------------------------------------------------------------------------------------------------
+Criterion=entropy | Splitter=random | maxDepth=5 | minSampleLeaves=2 | maxFeatures=None
+
+Classification Report:              precision    recall  f1-score   support
+
+           0       0.99      1.00      0.99      1257
+           1       1.00      0.99      0.99      1181
+
+    accuracy                           0.99      2438
+   macro avg       0.99      0.99      0.99      2438
+weighted avg       0.99      0.99      0.99      2438
+
+
+Runtime: 0.0067942142486572266
+Test set Accuracy:0.9934372436423298
+Train set Accuracy 0.9943721421034118
+Training set score: 0.9943721421034118
+Test set score: 0.9934372436423298
+
+Confusion matrix
+
+ [[1257    0]
+ [  16 1165]]
+----------------------------------------------------------------------------------------------------
+Criterion=gini | Splitter=best | maxDepth=5 | minSampleLeaves=2 | maxFeatures=None
+
+Classification Report:              precision    recall  f1-score   support
+
+           0       0.99      1.00      0.99      1257
+           1       1.00      0.99      0.99      1181
+
+    accuracy                           0.99      2438
+   macro avg       0.99      0.99      0.99      2438
+weighted avg       0.99      0.99      0.99      2438
+
+
+Runtime: 0.00681614875793457
+Test set Accuracy:0.9934372436423298
+Train set Accuracy 0.9943721421034118
+Training set score: 0.9943721421034118
+Test set score: 0.9934372436423298
+
+Confusion matrix
+
+ [[1257    0]
+ [  16 1165]]
+----------------------------------------------------------------------------------------------------
+Criterion=gini | Splitter=random | maxDepth=5 | minSampleLeaves=2 | maxFeatures=None
+
+Classification Report:              precision    recall  f1-score   support
+
+           0       0.99      1.00      0.99      1257
+           1       1.00      0.99      0.99      1181
+
+    accuracy                           0.99      2438
+   macro avg       0.99      0.99      0.99      2438
+weighted avg       0.99      0.99      0.99      2438
+
+
+Runtime: 0.006470680236816406
+Test set Accuracy:0.9934372436423298
+Train set Accuracy 0.9943721421034118
+Training set score: 0.9943721421034118
+Test set score: 0.9934372436423298
+
+Confusion matrix
+
+ [[1257    0]
+ [  16 1165]]
+--------------------------------------------------
