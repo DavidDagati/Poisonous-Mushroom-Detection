@@ -13,10 +13,13 @@ data = pd.read_csv("mush_data_names.csv")
 data_encoded = pd.get_dummies(data, drop_first=False)
 data_encoded = data_encoded.drop(columns=["poisonous/edible_edible"])
 
-# data_encoded.to_csv("mush_data_one_hot_encoded.csv")
+data_encoded.to_csv("mush_data_one_hot_encoded.csv")
 
 # data_encoded_2 = data_encoded.drop_duplicates(keep="first")
 
+# print(data_encoded.shape[1])
+
+# quit()
 
 x = data_encoded.drop(columns=["poisonous/edible_poisonous"]) 
 

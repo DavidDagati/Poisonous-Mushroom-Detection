@@ -1,59 +1,156 @@
 from sklearn.model_selection import GridSearchCV
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
-import pandas as pd
-import numpy as np
 
 from sklearn import metrics #Import scikit-learn metrics module for accuracy calculation
 from sklearn import tree
 from matplotlib import pyplot as plt
 from sklearn.metrics import classification_report, confusion_matrix
-
 from sklearn.preprocessing import OneHotEncoder
-
 from sklearn.metrics import roc_curve, auc
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
+import pandas as pd
+import numpy as np
 import json
 import time
 
 
-results = pd.read_csv('results_hyper_final.csv')
+'''
+PREPARE DATASET:
+'''
 
+# Step 1: Read Data
+data = pd.read_csv("mush_data_names.csv")
+
+
+# Make Data 1-hot encoded
+data_encoded = pd.get_dummies(data, drop_first=False)
+data_encoded = data_encoded.drop(columns=["poisonous/edible_edible"])
+
+# Save One-Hot Encoded Dataset
+data_encoded.to_csv("mush_data_one_hot_encoded.csv")
+
+# Set Inputs and Ouputs
+x = data_encoded.drop(columns=["poisonous/edible_poisonous"]) 
+y  = data_encoded['poisonous/edible_poisonous']
+
+
+x_train, x_test, y_train, y_test  = train_test_split(x, y, test_size=0.3, random_state=100)
+
+f = open('DecisionTree_Results/accuracies.txt', "w")
+
+'''
+DEFAULT PARAMETERS:
+'''
+
+# Start with max_depth of 2
+clf = DecisionTreeClassifier(random_state=123, max_depth=2)
+
+startTime = time.time()
+clf.fit(x_train,y_train)
+enclfime = time.time()
+
+y_pred = clf.predict(x_test)
+
+y_pred_train = clf.predict(x_train)
+
+
+
+f.write("-"*50)
+f.write("\nBefore Hyperparameter Tune:")
+
+f.write("\nClassification Report:")
+f.write(classification_report(y_test, y_pred) + "\n\n")
+
+
+
+fig = plt.figure(figsize=(25,20))
+_ = tree.plot_tree(clf, 
+                    feature_names=data_encoded.columns.values,  
+                    class_names="pe",
+                    label="all",
+                    filled=True)
+
+fig.savefig(f"DecisionTree_Results/Decision_Tree_Before.png")
+
+
+# Compare train-set and test-set accuracy
+
+f.write(f'Runtime: {enclfime - startTime}\n')
+
+f.write(f"Test set Accuracy:{metrics.accuracy_score(y_test, y_pred)}\n")
+
+f.write(f"Train set Accuracy {metrics.accuracy_score(y_train, y_pred_train)}\n")
+
+f.write(f'Training set score: {clf.score(x_train, y_train)}\n')
+
+f.write(f'Test set score: {clf.score(x_test, y_test)}\n')
+
+
+
+cm = confusion_matrix(y_test, y_pred, labels=clf.classes_)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm,
+                               display_labels=clf.classes_)
+disp.plot()
+
+plt.savefig(f"DecisionTree_Results/Before_ConfusionMatrix.png")
+
+
+f.write("-"*50)
+
+
+
+'''
+FIND THE MOST OPTIMAL HYPERPARAMETERS: 
+'''
+
+clf = DecisionTreeClassifier(random_state=123)
+
+
+params =  {
+    'criterion': ['gini', 'entropy'],
+    'min_samples_split': [8,10,12,18,20,30,40],
+    'max_features': list(range(1,x_train.shape[1], 4)),
+    'min_samples_leaf': [1,3,5,10,15,20],
+    'max_depth': [3,5,7,10,15]
+}
+
+# Use GridSearch to test all combinations 
+grid = GridSearchCV(estimator=clf,
+                    param_grid=params,
+                    cv=5,
+                    n_jobs=1,
+                    verbose=2)
+
+# Fit the model
+grid.fit(x_train, y_train)
+
+
+# Record Performance of each Hyperparameter combiation
+score_df = pd.DataFrame(grid.cv_results_)
+score_df.to_csv("DecisionTree_Results/results_hyper.csv")
+
+print(f"---\nCONFIRM RESULTS/TEST OTHER RANDOM STATES (FILTER)\n---")
+
+
+results = pd.read_csv('DecisionTree_Results/results_hyper.csv')
+
+
+# # Get all parameters to test
 testParam = []
-
 for row in results.iterrows():
     if(int(row[-1]['rank_test_score']) == 1):
         testParam.append(eval(row[-1]['params']))
 
 
-data = pd.read_csv("mush_data_names.csv")
-
-
-# Make Data 1-hot encoded
-# Keep Columns
-data_encoded = pd.get_dummies(data, drop_first=False)
-data_encoded = data_encoded.drop(columns=["poisonous/edible_edible"])
-
-# data_encoded.to_csv("mush_data_one_hot_encoded.csv")
-
-# data_encoded_2 = data_encoded.drop_duplicates(keep="first")
-
-
-x = data_encoded.drop(columns=["poisonous/edible_poisonous"]) 
-
-y  = data_encoded['poisonous/edible_poisonous']
-
-x_train, x_test, y_train, y_test  = train_test_split(x, y, test_size=0.3, random_state=42)
-
 left = len(testParam)
 finalParams = []
 
 for params in testParam:
-    # print(params['max_depth'])
     maxFalse = 0
-    print(f"There is {left} left")
+    print(f"There is {left}/{len(testParam)} left.")
    
-    # f.write(f"\nCriterion={params['criterion']} | Splitter={splitter} | maxDepth={maxDepth} | minSampleSplit={minSampleSplit} | maxFeatures={maxFeatures}\n")
     clf = None
     y_pred = None
     y_pred_train = None
@@ -75,47 +172,14 @@ for params in testParam:
 
     if(maxFalse == 0):
         finalParams.append(params)
-        f.write("-"*50)
-        f.write("\nClassification Report:")
-        f.write(classification_report(y_test, y_pred) + "\n\n")
 
-
-
-        # fig = plt.figure(figsize=(25,20))
-        # _ = tree.plot_tree(clf, 
-        #                     feature_names=data_encoded.columns.values,  
-        #                     class_names="pe",
-        #                     label="all",
-        #                     filled=True)
-
-        # fig.savefig(f"DecisionTree_Results/decistion_tree_FINAL.png")
-
-
-        # Compare train-set and test-set accuracy
-        # https://gist.github.com/SaranyaRavikumar06/f8a76c500f954fdfd927c74849bd24c3
-
-        f.write(f'Runtime: {enclfime - startTime}\n')
-
-        f.write(f"Test set Accuracy:{metrics.accuracy_score(y_test, y_pred)}\n")
-
-        f.write(f"Train set Accuracy {metrics.accuracy_score(y_train, y_pred_train)}\n")
-
-        f.write(f'Training set score: {clf.score(x_train, y_train)}\n')
-
-        f.write(f'Test set score: {clf.score(x_test, y_test)}\n')
-
-
-
-        f.write(f'\nConfusion matrix\n\n {cm}\n')
-
-        f.write("-"*50)
     left -= 1
 
+print(f"{len(testParam) - len(finalParams)} were successful.")
 
 
-# print(len(finalParams)) # 1151
 
-# print(finalParams[0])
+print(f"---\nCOUNT OF HYPERPARAMETERS\n---")
 
 res = {
     'criterion': {},
@@ -133,24 +197,20 @@ for param in finalParams:
     res['min_samples_split'][param['min_samples_split']] = res['min_samples_split'].get(param['min_samples_split'], 0) + 1
 
 
-out_file = open("DT_Data/paramCounts.json", "w")
 
-# print(len())
+out_file = open("DecisionTree_Results/paramCounts.json", "w")
 
-# json.dump(res, out_file)
+json.dump(res, out_file)
 
-# # f.close()
+out_file = open("DecisionTree_Results/finalParams.json", "w")
 
-out_file = open("DT_Data/finalParams.json", "r")
+json.dump(finalParams, out_file)
 
+print(f"{res}")
 
-# json.dump(finalParams, out_file)
-
-finalParams = json.load(out_file)
 
 params = None
 
-f = open('DecisionTree_Results/results_Final_HyperParams_3.txt', "w")
 
 for m in finalParams:
     if(m['criterion'] == 'entropy' and m['max_depth'] == 10 and m['max_features'] == 41 and m['min_samples_leaf'] == 3 and m['min_samples_split'] == 12):
@@ -166,10 +226,17 @@ y_pred = clf.predict(x_test)
 
 y_pred_train = clf.predict(x_train)
 
-cm = confusion_matrix(y_test, y_pred)
+cm = confusion_matrix(y_test, y_pred, labels=clf.classes_)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm,
+                               display_labels=clf.classes_)
+disp.plot()
+
+plt.savefig(f"DecisionTree_Results/Final_ConfusionMatrix.png")
 
 
 f.write("-"*50)
+f.write("\nAfter Hyperparameter Tune:")
+
 f.write("\nClassification Report:")
 f.write(classification_report(y_test, y_pred) + "\n\n")
 
@@ -203,3 +270,5 @@ f.write(f'Test set score: {clf.score(x_test, y_test)}\n')
 f.write(f'\nConfusion matrix\n\n {cm}\n')
 
 f.write("-"*50)
+
+

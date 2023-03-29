@@ -1,0 +1,45 @@
+--------------------------------------------------
+Before Hyperparameter Tune:
+Classification Report:              precision    recall  f1-score   support
+
+           0       0.98      0.93      0.95      1258
+           1       0.93      0.98      0.95      1180
+
+    accuracy                           0.95      2438
+   macro avg       0.95      0.95      0.95      2438
+weighted avg       0.95      0.95      0.95      2438
+
+
+Runtime: 0.009975194931030273
+Test set Accuracy:0.9524200164068909
+Train set Accuracy 0.9549771368272951
+Training set score: 0.9549771368272951
+Test set score: 0.9524200164068909
+
+Confusion matrix
+
+ [[1171   87]
+ [  29 1151]]
+----------------------------------------------------------------------------------------------------
+After Hyperparameter Tune:
+Classification Report:              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00      1258
+           1       1.00      1.00      1.00      1180
+
+    accuracy                           1.00      2438
+   macro avg       1.00      1.00      1.00      2438
+weighted avg       1.00      1.00      1.00      2438
+
+
+Runtime: 0.007403850555419922
+Test set Accuracy:1.0
+Train set Accuracy 1.0
+Training set score: 1.0
+Test set score: 1.0
+
+Confusion matrix
+
+ [[1258    0]
+ [   0 1180]]
+--------------------------------------------------
